@@ -1,7 +1,7 @@
 // TODO: fetch data from the PostgreSQL database (to be implemented later)
 function fetchGradeData() {
     //this function will query the PostgreSQL database and return grade data
-    HTMLFormControlsCollection.log("Fetch grade data...");
+    console.log("Fetching grade data...");
     //create a new request for HTTP data
     let xhr = new XMLHttpRequest();
     //This is the new address on the machine we're asking for data
@@ -10,14 +10,17 @@ function fetchGradeData() {
     xhr.onreadystatechange = function(){
         let results;
         //check if we're done
-        if(xhr.status === xhr.DONE){
+        if (xhr.readyState === XMLHttpRequest.DONE){
             //check if we're successful
-            if(xhr.status !==200){
-                console.error('Could not get grades.
-                              Status: ${xhr.status}');
-                    }
+            
        //and then call the function to update the html with our data
-            populateGradebook(JSON.parse(xhr.responseText));
+   
+       if (xhr.status === 200) {
+        populateGradebook(JSON.parse(xhr.responseText));
+        } else {
+        console.error(`Could not get grades. Status: ${xhr.status}`);
+}
+
         }
     }.bind(this);
     xhr.open("get",apiRoute,true);
@@ -42,7 +45,7 @@ function populateGradebook(data) {
                 //just put the name in text, you could be fancy and figure out the letter grade here
                 //with either a bunch of conditions, or a JavaScript "switch" statement
                 document.createTextNode(assignment.total_grade)
-                ):
+                );
             //add the table data columns to the table row
             row.appendChild(columns.name);
             row.appendChild(columns.grade);
@@ -51,8 +54,4 @@ function populateGradebook(data) {
         });
 }
 
-// TODO REMOVE THIS
-//Call the stubs to demonstrate workflow
-const gradeData = fetchGradeData();
-populateGradebook(gradeData);
-// END REMOVE
+
